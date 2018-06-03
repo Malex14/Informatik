@@ -16,6 +16,7 @@ int serialindex = 0;
 boolean cmdmode = false;
 boolean cmdexe = false;
 String cmd = "";
+boolean soe = true;
 
 byte ledPin[4][5][2] =
 {{{E,A},{E,B},{E,C},{E,D},{D,E}},         // { A , B }
@@ -128,7 +129,11 @@ void serialEvent() {
      else{
       if (cmdmode == false){
         serialControll = true;
+        if(soe) {
           inputString += ' ';
+          
+          
+        }
           inputString += ' ';
           inputString += ' ';
           char buf[inputString.length()];
@@ -152,33 +157,47 @@ void serialEvent() {
               cmdmode = false;
               cmd = "";
               duration = inputString.toInt();
-              Serial.print("[CMD-DURATION]: Duration: ");
+              Serial.print("[CMD]: Duration: ");
               Serial.println(inputString.toInt());
-              Serial.println("[CMD]: OFF!");
+              Serial.println("[CMD]: OFF");
               break;
             }
           }
           else{
           if(inputString == "dur"){
-              Serial.println("[CMD-DURATION]: Please send new duration");
+              Serial.println("[CMD]: Please send new duration");
               cmdexe = true;
               cmd = "dur"; 
           }
           else if(inputString == "chartest"){
               serialControll = false;
-              Serial.println("[CMD-CHARTEST]: chartest mode");
-              Serial.println("[CMD]: OFF!");
+              Serial.println("[CMD]: chartest mode");
+              Serial.println("[CMD]: OFF");
               cmdmode = false;
           }
           else if(inputString == "bgn"){
-            Serial.println("[CMD-BGN]: Beginning from start.");
-            Serial.println("[CMD]: OFF!");
+            Serial.println("[CMD]: Beginning from start");
+            Serial.println("[CMD]: OFF");
             serialindex = 0;
+            cmdmode = false;
+          }
+          else if(inputString == "soe"){
+            if(soe) {
+              soe = false;
+              Serial.println("[CMD]: SOE OFF");
+              
+            }
+            else{
+              soe = true;
+              Serial.println("[CMD]: SOE ON");
+            }
+            Serial.println("[CMD]: OFF");
+            Serial.println(soe);
             cmdmode = false;
           }
           else{
               cmdmode = false;
-              Serial.println("[CMD]: OFF!");
+              Serial.println("[CMD]: OFF");
           }
         }
         
