@@ -68,7 +68,8 @@ const boolean symbol[][5][4]={{{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0}
                              ,{{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,1,0},{0,1,0,0}}  // ,  41
                              ,{{0,0,0,0},{0,0,1,0},{0,0,0,0},{0,0,1,0},{0,1,0,0}}  // ;  42
                              ,{{0,1,1,0},{0,1,1,0},{0,1,1,0},{0,0,0,0},{0,1,1,0}}  // !  43
-                             ,{{1,0,1,0},{0,1,0,1},{1,0,1,0},{0,1,0,1},{1,0,1,0}}  // ERROR  44
+                             ,{{0,0,0,1},{0,0,1,0},{0,1,1,0},{0,1,0,0},{1,0,0,0}}  // /  44
+                             ,{{1,0,1,0},{0,1,0,1},{1,0,1,0},{0,1,0,1},{1,0,1,0}}  // ERROR  45
 };
 
 
@@ -131,8 +132,6 @@ void serialEvent() {
         serialControll = true;
         if(soe) {
           inputString += ' ';
-          
-          
         }
           inputString += ' ';
           inputString += ' ';
@@ -184,28 +183,24 @@ void serialEvent() {
           else if(inputString == "soe"){
             if(soe) {
               soe = false;
-              Serial.println("[CMD]: SOE OFF");
+              Serial.println("[CMD]: SOE OFF (Please send Text again)");
               
             }
             else{
               soe = true;
-              Serial.println("[CMD]: SOE ON");
+              Serial.print("[CMD]: SOE ON (Please send Text again)");
             }
             Serial.println("[CMD]: OFF");
-            Serial.println(soe);
             cmdmode = false;
           }
           else{
               cmdmode = false;
               Serial.println("[CMD]: OFF");
           }
-        }
-        
+        }    
       }
      }
-     
    }
- 
   }
 }
 
@@ -344,8 +339,11 @@ void chartoindex(char input){
   case '!':
     chartoindexresult = 43;
     break;
-  default:
+  case '/':
     chartoindexresult = 44;
+    break;
+  default:
+    chartoindexresult = 45;
 }
 }
 
@@ -371,14 +369,12 @@ void loop() {
        serialindex++;
       
     }
-    if(displayedsymbolindex == 44) displayedsymbolindex = 0;
+    if(displayedsymbolindex == 46) displayedsymbolindex = 0;
     previousMillis = currentMillis;
   }
   displaysymbol(displayedsymbolindex);
   
   if (stringComplete) {
-    
-
     inputString = "";
     stringComplete = false;
   }
